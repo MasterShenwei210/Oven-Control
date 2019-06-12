@@ -1,7 +1,7 @@
 # FIXED
 
 FIFO.obj: ../FIFO.c
-FIFO.obj: C:/Users/Sherwin/workspace_v8/testing_uart_lib/FIFO.h
+FIFO.obj: C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs/FIFO.h
 FIFO.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdbool.h
 FIFO.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdint.h
 FIFO.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/sys/stdint.h
@@ -15,7 +15,7 @@ FIFO.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/_ti_config
 FIFO.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/linkage.h
 
 ../FIFO.c: 
-C:/Users/Sherwin/workspace_v8/testing_uart_lib/FIFO.h: 
+C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs/FIFO.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdbool.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdint.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/sys/stdint.h: 

@@ -1,7 +1,7 @@
 # FIXED
 
 main.obj: ../main.c
-main.obj: C:/Users/Sherwin/workspace_v8/testing_uart_lib/UART.h
+main.obj: C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs/UART.h
 main.obj: C:/ti/ccsv8/ccs_base/msp430/include/msp430.h
 main.obj: C:/ti/ccsv8/ccs_base/msp430/include/msp430f5529.h
 main.obj: C:/ti/ccsv8/ccs_base/msp430/include/in430.h
@@ -17,7 +17,7 @@ main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/sys/_stdin
 main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdbool.h
 
 ../main.c: 
-C:/Users/Sherwin/workspace_v8/testing_uart_lib/UART.h: 
+C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs/UART.h: 
 C:/ti/ccsv8/ccs_base/msp430/include/msp430.h: 
 C:/ti/ccsv8/ccs_base/msp430/include/msp430f5529.h: 
 C:/ti/ccsv8/ccs_base/msp430/include/in430.h: 

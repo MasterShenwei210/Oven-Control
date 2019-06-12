@@ -9,17 +9,17 @@
  */
 #include <UART.h>
 
-uint8_t UART_transmit_buffer[TRANSMIT_BUF_SIZE];
+uint8_t UART_transmit_buffer[UART_TRANSMIT_BUF_SIZE];
 int transmit_count = 0;
 int transmit_ptr = 0;
 bool UART_transmitting;
-bool stall_transmit = false;
+bool block_transmit = false;
 
-uint8_t UART_receive_buffer[RECEIVE_BUF_SIZE];
+uint8_t UART_receive_buffer[UART_RECEIVE_BUF_SIZE];
 int UART_receive_count = 0;
 int receive_ptr = 0;
-bool stall_receive = false;
-int stall_receive_count = 0;
+bool block_receive = false;
+int block_receive_count = 0;
 
 /*
  * Call after initializing clocks, sets up UART to 115200 and IO.
@@ -34,6 +34,7 @@ int stall_receive_count = 0;
 void UART_init() {
 #if defined (__MSP430F5529__)
     P4SEL |= BIT4 | BIT5;
+
     UCA1CTL1 |= UCSWRST;
     UCA1CTL1 = UCSSEL_2 + UCSWRST;
     // Sets baud rate to 115200
@@ -45,13 +46,13 @@ void UART_init() {
 
     UCA1IE |= UCRXIE;
 #elif defined (__MSP430FR2355__)
-    P4SEL0 |= BIT2 | BIT3;
+    P4SEL0 |= BIT2 + BIT3;
 
     UCA1CTLW0 |= UCSWRST;
-    UCA1CTLW0 = UCSSEL__SMCLK | UCSWRST;
+    UCA1CTLW0 = UCSSEL__SMCLK + UCSWRST;
     // Sets baud rate to 115200
     UCA1BRW = 2;
-    UCA1MCTLW = (0xBB << 8) | (0x02 << 4) | 0x01;
+    UCA1MCTLW = (0xBB << 8) + (0x02 << 4) + 0x01;
 
     UCA1CTLW0 &= ~UCSWRST;
 
@@ -87,7 +88,7 @@ void UART_transmit_bytes(uint8_t *buffer, int count, bool blocking) {
     UART_copy_array(buffer, UART_transmit_buffer, count);
 
     transmit_ptr = 0;
-    stall_transmit = blocking;
+    block_transmit = blocking;
     transmit_count = count;
     UART_transmitting = true;
 
@@ -95,7 +96,7 @@ void UART_transmit_bytes(uint8_t *buffer, int count, bool blocking) {
 #if defined (__MSP430F5529__)
     UCA1IE |= UCTXIE;
     UCA1TXBUF = UART_transmit_buffer[transmit_ptr];
-#elif
+#elif defined (__MSP430FR2355__)
     UCA1IE |= UCTXIE;
     UCA1TXBUF_L = UART_transmit_buffer[transmit_ptr];
 #endif
@@ -122,8 +123,8 @@ void UART_receive_bytes(uint8_t *buffer, bool blocking, int count) {
     __disable_interrupt();
     // Enter sleep mode if blocking and there aren't enough bytes available
     if (blocking && UART_receive_count < count) {
-        stall_receive = true;
-        stall_receive_count = count;
+        block_receive = true;
+        block_receive_count = count;
         __bis_SR_register(LPM0_bits + GIE);
         __disable_interrupt();
     }
@@ -153,14 +154,15 @@ __interrupt void UART_ISR(void) {
             } else {
                 UART_transmitting = false;
                 UCA1IE &= ~UCTXIE;
-                // Exit LPM0 if stalling
-                if (stall_transmit) __bic_SR_register_on_exit(CPUOFF);               }
+                // Exit LPM0 if blocking
+                if (block_transmit) __bic_SR_register_on_exit(CPUOFF);
+            }
             UCA1IFG &= ~UCTXIFG;
             break;
 
         // Received byte interrupt
         case 0x02:
-            if (receive_ptr < RECEIVE_BUF_SIZE) {
+            if (receive_ptr < UART_RECEIVE_BUF_SIZE) {
 #if defined (__MSP430F5529__)
                 UART_receive_buffer[receive_ptr] = UCA1RXBUF;
 #elif defined (__MSP430FR2355__)
@@ -170,9 +172,9 @@ __interrupt void UART_ISR(void) {
             receive_ptr++;
             UART_receive_count++;
 
-            // Exit LPM0 if stalling
-            if (stall_receive) {
-               if (UART_receive_count >= stall_receive_count) __bic_SR_register_on_exit(CPUOFF);
+            // Exit LPM0 if blocking
+            if (block_receive) {
+               if (UART_receive_count >= block_receive_count) __bic_SR_register_on_exit(CPUOFF);
             }
 
             UCA1IFG &= ~UCRXIFG;

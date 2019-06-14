@@ -1,1 +1,1 @@
-"./FIFO.obj" "./SPI.obj" "./UART.obj" "./main.obj" "../lnk_msp430f5529.cmd" -llibmath.a -llibc.a 
+"./FIFO.obj" "./MAX11254.obj" "./SPI.obj" "./UART.obj" "./main.obj" "../lnk_msp430f5529.cmd" -llibmath.a -llibc.a 

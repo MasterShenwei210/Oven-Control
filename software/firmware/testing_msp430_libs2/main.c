@@ -1,6 +1,6 @@
 #include <UART.h>
 
-//#include <math.h>
+#include <math.h>
 /**
  * main.c
  */
@@ -10,7 +10,7 @@ uint8_t string[20] = {0};
 int main(void)
 {
     uint8_t string[20] = {0};
-	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	/*WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
 	initClockTo16MHz();
 	UART_init();
 	__enable_interrupt();
@@ -19,9 +19,9 @@ int main(void)
 	int k = 0;
 	while (string[k] != 0 && k < 20) k++;
 	UART_transmit_bytes("Your name is: ", 14, true);
-	UART_transmit_bytes(string, k-1, true);
-	/*double x = 2.7;
-	volatile double y = log(2.7);*/
+	UART_transmit_bytes(string, k-1, true);*/
+	double x = 2.7;
+	volatile double y = log(2.7);
 	return 0;
 }
 

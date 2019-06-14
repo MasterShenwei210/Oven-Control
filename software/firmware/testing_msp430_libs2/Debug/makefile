@@ -10,7 +10,6 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
-"./FIFO.obj" \
 "./MAX11254.obj" \
 "./SPI.obj" \
 "./UART.obj" \
@@ -125,42 +124,42 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-testing_msp430_libs.out \
+testing_msp430_libs2.out \
 
 EXE_OUTPUTS__QUOTED += \
-"testing_msp430_libs.out" \
+"testing_msp430_libs2.out" \
 
 BIN_OUTPUTS += \
-testing_msp430_libs.hex \
+testing_msp430_libs2.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"testing_msp430_libs.hex" \
+"testing_msp430_libs2.hex" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "testing_msp430_libs.out"
+	@$(MAKE) --no-print-directory -Onone "testing_msp430_libs2.out"
 
 # Tool invocations
-testing_msp430_libs.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+testing_msp430_libs2.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: MSP430 Linker'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"testing_msp430_libs.map" --heap_size=300 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccsv8/ccs_base/msp430/include" -i"C:/ti/ccsv8/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/lib" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="testing_msp430_libs_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "testing_msp430_libs.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"testing_msp430_libs2.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccsv8/ccs_base/msp430/include" -i"C:/ti/ccsv8/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/lib" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="testing_msp430_libs2_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "testing_msp430_libs2.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
-testing_msp430_libs.hex: $(EXE_OUTPUTS)
+testing_msp430_libs2.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: MSP430 Hex Utility'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/bin/hex430" --memwidth=8 --romwidth=8 -o "testing_msp430_libs.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/bin/hex430" --memwidth=8 --romwidth=8 -o "testing_msp430_libs2.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "FIFO.obj" "MAX11254.obj" "SPI.obj" "UART.obj" "main.obj" 
-	-$(RM) "FIFO.d" "MAX11254.d" "SPI.d" "UART.d" "main.d" 
+	-$(RM) "MAX11254.obj" "SPI.obj" "UART.obj" "main.obj" 
+	-$(RM) "MAX11254.d" "SPI.d" "UART.d" "main.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

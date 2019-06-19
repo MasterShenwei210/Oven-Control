@@ -1,1 +1,1 @@
-"./UART.obj" "./main.obj" "../lnk_msp430fr2355.cmd" -lfrwp_init.a -llibc.a 
+"./MAX11254.obj" "./SPI.obj" "./UART.obj" "./main.obj" "./uart_example.obj" "../lnk_msp430fr2355.cmd" -lfrwp_init.a -llibc.a 

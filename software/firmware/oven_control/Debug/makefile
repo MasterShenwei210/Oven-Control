@@ -10,8 +10,11 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./MAX11254.obj" \
+"./SPI.obj" \
 "./UART.obj" \
 "./main.obj" \
+"./uart_example.obj" \
 "../lnk_msp430fr2355.cmd" \
 $(GEN_CMDS__FLAG) \
 -lfrwp_init.a \
@@ -156,8 +159,8 @@ oven_control.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "UART.obj" "main.obj" 
-	-$(RM) "UART.d" "main.d" 
+	-$(RM) "MAX11254.obj" "SPI.obj" "UART.obj" "main.obj" "uart_example.obj" 
+	-$(RM) "MAX11254.d" "SPI.d" "UART.d" "main.d" "uart_example.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

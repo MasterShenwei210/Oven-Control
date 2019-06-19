@@ -119,6 +119,7 @@ void SPI_transfer_bytes(uint8_t *tx_buffer, uint8_t *rx_buffer, int count, bool 
     block_transfer = blocking;
 
     SPI_CS_OUT ^= SPI_CS_PIN;
+    UCA0IE |= UCRXIE;
 #if defined (__MSP430F5529__)
     UCA0TXBUF = SPI_transmit_buffer[transfer_ptr];
 #elif defined (__MSP430FR2355__)
@@ -135,9 +136,9 @@ void SPI_transfer_bytes(uint8_t *tx_buffer, uint8_t *rx_buffer, int count, bool 
 #pragma vector=EUSCI_B1_VECTOR
 #endif
 __interrupt void SPI_ISR(void) {
-    uint16_t uciv = UCA0IV;
+    uint8_t uciv = UCA0IV;
     switch(uciv) {
-        case 0x04:
+        case 0x02:
 #if defined (__MSP430F5529__)
             SPI_receive_buffer[transfer_ptr] = UCA0RXBUF;
 #elif defined (__MSP430FR2355__)
@@ -156,7 +157,7 @@ __interrupt void SPI_ISR(void) {
                 if (block_transfer) __bic_SR_register_on_exit(CPUOFF);
             }
 #if defined (__MSP430F5529__)
-            UCA0IFG &= ~UCRXIFG;
+            UCA0IFG &= ~(UCRXIFG);
 #elif defined (__MSP430FR2355__)
             UCB1IFG &= ~UCRXIFG;
 #endif

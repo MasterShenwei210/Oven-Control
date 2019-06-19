@@ -17,7 +17,7 @@
 #if defined (__MSP430F5529__)
 #define SPI_CS_OUT      P1OUT
 #define SPI_CS_DIR      P1DIR
-#define SPI_CS_PIN      BIT0
+#define SPI_CS_PIN      BIT6
 #endif
 
 extern bool SPI_transfering;

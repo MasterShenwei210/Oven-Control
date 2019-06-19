@@ -1,6 +1,6 @@
 #include <UART.h>
-
-#include <math.h>
+#include <SPI.h>
+#include <MAX11254.h>
 /**
  * main.c
  */
@@ -9,27 +9,27 @@ void initClockTo16MHz();
 uint8_t string[20] = {0};
 int main(void)
 {
-    uint8_t string[20] = {0};
-	/*WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
-	initClockTo16MHz();
-	UART_init();
-	__enable_interrupt();
-	UART_transmit_bytes("Enter your name: \r\n", 19, false);
-	UART_receive_bytes(string, true, 20);
-	int k = 0;
-	while (string[k] != 0 && k < 20) k++;
-	UART_transmit_bytes("Your name is: ", 14, true);
-	UART_transmit_bytes(string, k-1, true);*/
-	double x = 2.7;
-	volatile double y = log(2.7);
-	return 0;
+
+    // P4.2 -> RSTB
+    // P4.1 -> RDYB
+    P4DIR |= BIT2;
+    P4OUT |= BIT2;
+
+    SPI_init(true, false, true, 40, true);
+
+    uint8_t ctrl2;
+    __enable_interrupt();
+    MAX11254_config_ctrl2(false, 0x02);
+    MAX11254_read_register(CTRL2_ADDR, &ctrl2, 1);
+
+    return 0;
 }
 
 
 void initClockTo16MHz()
 {
 
-    UCSCTL3 |= SELREF_2;                      // Set DCO FLL reference = REFO
+    //UCSCTL3 |= SELREF_2;                      // Set DCO FLL reference = REFO
     UCSCTL4 = SELA_2 + SELS_3 + SELM_3;       // Set ACLK = REFO, SMCLK = DCO
     UCSCTL5 = DIVS_2;                         // Divide SMCLK by 4, so SMCLK = 4MHz
     __bis_SR_register(SCG0);                  // Disable the FLL control loop

@@ -15,11 +15,9 @@ main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/machine/_t
 main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/machine/_stdint.h
 main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/sys/_stdint.h
 main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdbool.h
-main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/math.h
-main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/_ti_config.h
-main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/linkage.h
-main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/_defs.h
-main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/machine/_limits.h
+main.obj: C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs2/SPI.h
+main.obj: C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs2/MAX11254.h
+main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/float.h
 
 ../main.c: 
 C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs2/UART.h: 
@@ -36,8 +34,6 @@ C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/machine/_types.h:
 C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/machine/_stdint.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/sys/_stdint.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdbool.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/math.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/_ti_config.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/linkage.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/_defs.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/machine/_limits.h: 
+C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs2/SPI.h: 
+C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/testing_msp430_libs2/MAX11254.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/float.h: 

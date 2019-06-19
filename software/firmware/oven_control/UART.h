@@ -12,8 +12,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define TRANSMIT_BUF_SIZE  20
-#define RECEIVE_BUF_SIZE   20
+#define UART_TRANSMIT_BUF_SIZE  20
+#define UART_RECEIVE_BUF_SIZE   20
 
 extern bool UART_transmitting;
 extern int UART_receive_count;

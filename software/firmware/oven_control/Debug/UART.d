@@ -1,7 +1,7 @@
 # FIXED
 
 UART.obj: ../UART.c
-UART.obj: C:/Users/Sherwin/workspace_v8/Oven\ Control/UART.h
+UART.obj: C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/oven_control/UART.h
 UART.obj: C:/ti/ccsv8/ccs_base/msp430/include/msp430.h
 UART.obj: C:/ti/ccsv8/ccs_base/msp430/include/msp430fr2355.h
 UART.obj: C:/ti/ccsv8/ccs_base/msp430/include/in430.h
@@ -18,7 +18,7 @@ UART.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/sys/_stdin
 UART.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-msp430_18.1.4.LTS/include/stdbool.h
 
 ../UART.c: 
-C:/Users/Sherwin/workspace_v8/Oven\ Control/UART.h: 
+C:/Users/Sherwin/Documents/MEMES/oven_control_project/software/firmware/oven_control/UART.h: 
 C:/ti/ccsv8/ccs_base/msp430/include/msp430.h: 
 C:/ti/ccsv8/ccs_base/msp430/include/msp430fr2355.h: 
 C:/ti/ccsv8/ccs_base/msp430/include/in430.h: 

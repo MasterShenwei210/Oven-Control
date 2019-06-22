@@ -8,9 +8,9 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-#include <msp430.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include "eusci_b_spi.h"
+#include "Board.h"
+#include "gpio.h"
 
 #define SPI_TRANSMIT_BUF_SIZE  20
 
@@ -18,15 +18,11 @@
 #define SPI_CS_OUT      P1OUT
 #define SPI_CS_DIR      P1DIR
 #define SPI_CS_PIN      BIT6
-#elif defined (__MSP430FR2355__)
-#define SPI_CS_OUT      P4OUT
-#define SPI_CS_DIR      P4DIR
-#define SPI_CS_PIN      BIT4
 #endif
 
 extern bool SPI_transfering;
 
-void SPI_init(bool clk_phase_rising, bool clk_pol_high, bool msb_first, uint16_t brclk_div, bool cs_idle_high);
+void SPI_init(bool clk_phase_rising, bool clk_pol_high, bool msb_first, uint32_t clk_freq, bool cs_idle_high);
 void SPI_copy_array(uint8_t *src, uint8_t *dest, int count);
 
 void SPI_transfer_bytes(uint8_t *tx_buffer, uint8_t *rx_buffer, int count, bool blocking);

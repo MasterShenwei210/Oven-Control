@@ -17,11 +17,6 @@ int transfer_ptr = 0;
 /*
  * Call after initializing clocks, sets up UART to 115200 and IO.
  * Sources SMCLK
- *
- * MSP430f5529:
- *              CLK -> P2.7
- *              SIMO -> P3.3
- *              SOMI -> P3.4
  * MSP430FR2355:
  *              CLK -> P4.5
  *              SIMO -> P4.6
@@ -40,46 +35,50 @@ int transfer_ptr = 0;
  *          cs_idle_high:
  *                          if true, CS is idle high and goes low during every transfer
  */
-void SPI_init(bool clk_phase_rising, bool clk_pol_high, bool msb_first, uint16_t brclk_div, bool cs_idle_high) {
-    SPI_CS_DIR |= SPI_CS_PIN;
-#if defined (__MSP430F5529__)
-    P3SEL |= BIT3 + BIT4;
-    P2SEL |= BIT7;
+void SPI_init(bool clk_phase_rising, bool clk_pol_high, bool msb_first, uint32_t clk_freq, bool cs_idle_high) {
+    GPIO_setAsPeripheralModuleFunctionInputPin(
+            GPIO_PORT_UCB1CLK,
+            GPIO_PIN_UCB1CLK,
+            GPIO_FUNCTION_UCB1CLK
+    );
 
-    UCA0CTL1 |= UCSWRST;
-    UCA0CTL0 = UCSYNC + UCMST;
-    if (clk_phase_rising) UCA0CTL0 |= UCCKPH;
-    if (clk_pol_high) UCA0CTL0 |= UCCKPL;
-    if (msb_first) UCA0CTL0 |= UCMSB;
+    GPIO_setAsPeripheralModuleFunctionInputPin(
+            GPIO_PORT_UCB1SIMO,
+            GPIO_PIN_UCB1SIMO,
+            GPIO_FUNCTION_UCB1SIMO
+    );
+
+    GPIO_setAsPeripheralModuleFunctionInputPin(
+            GPIO_PORT_UCB1SOMI,
+            GPIO_PIN_UCB1SOMI,
+            GPIO_FUNCTION_UCB1SOMI
+    );
+
+    GPIO_setAsOutputPin(GPIO_PORT_CSB, GPIO_PIN_CSB);
+
     if (cs_idle_high) {
-        SPI_CS_OUT |= SPI_CS_PIN;
+        GPIO_setOutputHighOnPin(GPIO_PORT_CSB, GPIO_PIN_CSB);
     } else {
-        SPI_CS_OUT &= ~SPI_CS_PIN;
+        GPIO_setOutputLowOnPin(GPIO_PORT_CSB, GPIO_PIN_CSB);
     }
-    UCA0CTL1 = UCSSEL_2 + UCSWRST;
-    UCA0BR0 = (uint8_t) brclk_div;
-    UCA0BR1 = (uint8_t) (brclk_div >> 8);
-    UCA0IE |= UCRXIE;
 
-    UCA0CTL1 &= ~UCSWRST;
-#elif defined (__MSP430FR2355__)
-    P4SEL0 = BIT7 + BIT6 + BIT5;
+    EUSCI_B_SPI_initMasterParam param = {0};
+    if (clk_phase_rising) param.clockPhase = EUSCI_B_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
+    else param.clockPhase = EUSCI_B_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
 
-    UCB1CTLW0 |= UCSWRST;
-    UCB1CTLW0 = UCSYNC + UCMST + UCSSEL_2 + UCSWRST;
-    if (clk_phase_rising) UCB1CTLW0 |= UCCKPH;
-    if (clk_pol_high) {
-        UCB1CTLW0 |= UCCKPL;
-        SPI_CS_OUT |= SPI_CS_PIN;
-    } else {
-        SPI_CS_OUT &= ~SPI_CS_PIN;
-    }
-    if (msb_first) UCB1CTLW0 |= UCMSB;
-    UCB1BRW = brclk_div;
-    UCB1IE |= UCRXIE;
+    if (clk_pol_high) param.clockPolarity = EUSCI_B_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
+    else param.clockPolarity = EUSCI_B_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
 
-    UCB1CTLW0 &= ~UCSWRST;
-#endif
+    if (msb_first) param.msbFirst = EUSCI_B_SPI_MSB_FIRST;
+    else param.msbFirst = EUSCI_B_SPI_LSB_FIRST;
+
+    param.selectClockSource = EUSCI_B_SPI_CLOCKSOURCE_SMCLK;
+    param.clockSourceFrequency = SMCLK_FREQ;
+    param.desiredSpiClock = clk_freq;
+    param.spiMode = EUSCI_B_SPI_3PIN;
+
+    EUSCI_B_SPI_initMaster(EUSCI_B1_BASE, &param);
+    EUSCI_B_SPI_enable(EUSCI_B1_BASE);
 }
 
 
@@ -110,57 +109,53 @@ void SPI_copy_array(uint8_t *src, uint8_t *dest, int count) {
  *                  variable)
  */
 void SPI_transfer_bytes(uint8_t *tx_buffer, uint8_t *rx_buffer, int count, bool blocking) {
-    SPI_copy_array(tx_buffer, SPI_transmit_buffer, count);
-
-    SPI_receive_buffer = rx_buffer;
-    transfer_ptr = 0;
-    transfer_count = count;
-    SPI_transfering = true;
-    block_transfer = blocking;
-
-    SPI_CS_OUT ^= SPI_CS_PIN;
-    UCA0IE |= UCRXIE;
-#if defined (__MSP430F5529__)
-    UCA0TXBUF = SPI_transmit_buffer[transfer_ptr];
-#elif defined (__MSP430FR2355__)
-    UCB1TXBUF_L = SPI_transmit_buffer[transfer_ptr];
-#endif
     if (blocking) {
-        __bis_SR_register(LPM0_bits + GIE);
+        int i = 0;
+        GPIO_toggleOutputOnPin(GPIO_PORT_CSB, GPIO_PIN_CSB);
+        for (i = 0; i < count; i++) {
+            EUSCI_B_SPI_transmitData(EUSCI_B1_BASE, tx_buffer[i]);
+            while (EUSCI_B_SPI_isBusy(EUSCI_B1_BASE) == EUSCI_B_SPI_BUSY);
+            rx_buffer[i] = EUSCI_B_SPI_receiveData(EUSCI_B1_BASE);
+        }
+        GPIO_toggleOutputOnPin(GPIO_PORT_CSB, GPIO_PIN_CSB);
+    } else {
+        SPI_copy_array(tx_buffer, SPI_transmit_buffer, count);
+
+        SPI_receive_buffer = rx_buffer;
+        transfer_ptr = 0;
+        transfer_count = count;
+        SPI_transfering = true;
+
+        EUSCI_B_SPI_clearInterrupt(
+                EUSCI_B1_BASE,
+                EUSCI_B_SPI_RECEIVE_INTERRUPT
+        );
+        EUSCI_B_SPI_enableInterrupt(
+                EUSCI_B1_BASE,
+                EUSCI_B_SPI_RECEIVE_INTERRUPT
+        );
+        __bis_SR_register(GIE);
+        GPIO_toggleOutputOnPin(GPIO_PORT_CSB, GPIO_PIN_CSB);
+        EUSCI_B_SPI_transmitData(EUSCI_B1_BASE, SPI_transmit_buffer[transfer_ptr]);
     }
 }
 
-#if defined (__MSP430F5529__)
-#pragma vector=USCI_A0_VECTOR
-#elif defined (__MSP430FR2355__)
-#pragma vector=EUSCI_B1_VECTOR
-#endif
+#pragma vector=USCI_B1_VECTOR
 __interrupt void SPI_ISR(void) {
-    uint8_t uciv = UCA0IV;
-    switch(uciv) {
-        case 0x02:
-#if defined (__MSP430F5529__)
-            SPI_receive_buffer[transfer_ptr] = UCA0RXBUF;
-#elif defined (__MSP430FR2355__)
-            SPI_receive_buffer[transfer_ptr] = UCB1RXBUF_L;
-#endif
+    switch(__even_in_range(UCB1IV, USCI_SPI_UCTXIFG)) {
+        case USCI_SPI_UCRXIFG:
+            SPI_receive_buffer[transfer_ptr] = EUSCI_B_SPI_receiveData(EUSCI_B1_BASE);
             transfer_ptr++;
             if (transfer_ptr < transfer_count) {
-#if defined (__MSP430F5529__)
-                UCA0TXBUF = SPI_transmit_buffer[transfer_ptr];
-#elif defined (__MSP430FR2355__)
-                UCB1TXBUF_L = SPI_transmit_buffer[transfer_ptr];
-#endif
+                EUSCI_B_SPI_transmitData(EUSCI_B1_BASE, SPI_transmit_buffer[transfer_ptr]);
             } else {
-                SPI_CS_OUT ^= SPI_CS_PIN;
+                GPIO_toggleOutputOnPin(GPIO_PORT_CSB, GPIO_PIN_CSB);
                 SPI_transfering = false;
-                if (block_transfer) __bic_SR_register_on_exit(CPUOFF);
+                EUSCI_B_SPI_disableInterrupt(
+                        EUSCI_B1_BASE,
+                        EUSCI_B_SPI_RECEIVE_INTERRUPT
+                );
             }
-#if defined (__MSP430F5529__)
-            UCA0IFG &= ~(UCRXIFG);
-#elif defined (__MSP430FR2355__)
-            UCB1IFG &= ~UCRXIFG;
-#endif
             break;
     }
 }

@@ -163,13 +163,10 @@ void UART_ISR(void) {
         case USCI_UART_UCRXIFG:
             if (UART_receive_count < UART_RECEIVE_BUF_SIZE) {
                 UART_receive_buffer[UART_receive_count] = EUSCI_A_UART_receiveData(EUSCI_A1_BASE);
-                EUSCI_A_UART_transmitData(EUSCI_A1_BASE,
-                    UART_receive_buffer[UART_receive_count]
-                );
+                EUSCI_A_UART_transmitData(EUSCI_A1_BASE, UART_receive_buffer[UART_receive_count]);
                 UART_receive_count++;
             }
-            command_state = COMMAND_RECEIVE;
-            __bic_SR_register_on_exit(LPM0_bits);
+     //       P4IFG |= BIT0;
             EUSCI_A_UART_clearInterrupt(
                     EUSCI_A1_BASE,
                     EUSCI_A_UART_RECEIVE_INTERRUPT);

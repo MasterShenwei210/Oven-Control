@@ -8,11 +8,14 @@
 #ifndef UART_H_
 #define UART_H_
 
-#include "driverlib.h"
+#include "eusci_a_uart.h"
+#include "gpio.h"
 #include "Board.h"
 
-#define UART_TRANSMIT_BUF_SIZE  20
-#define UART_RECEIVE_BUF_SIZE   20
+#define UART_TRANSMIT_BUF_SIZE  30
+#define UART_RECEIVE_BUF_SIZE   30
+
+extern uint8_t UART_receive_buffer[UART_RECEIVE_BUF_SIZE];
 
 extern bool UART_transmitting;
 extern int UART_receive_count;

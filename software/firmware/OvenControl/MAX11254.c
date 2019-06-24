@@ -64,7 +64,7 @@ void MAX11254_enter_seq_mode1(bool continuous, uint8_t mux_delay, uint8_t rate) 
 }
 
 
-void MAX11254_select_channel(uint8_t channel) {
+void MAX11254_select_channel(uint8_t channel, uint8_t pga, uint8_t delay) {
     transmit_buffer[0] = COMMAND_BYTE | BIT4;
     while (SPI_transfering);
     SPI_transfer_bytes(transmit_buffer, receive_buffer, 1, false);
@@ -74,6 +74,13 @@ void MAX11254_select_channel(uint8_t channel) {
     seq_val &= ~(BIT7 + BIT6 + BIT5);
     seq_val |= ((channel & 0x07) << 5);
     MAX11254_write_register(SEQ_ADDR, &seq_val, 1);
+
+    MAX11254_config_ctrl2(false, pga);
+
+    uint8_t data[2];
+    data[0] = delay;
+    data[1] = 0;
+    MAX11254_write_register(DELAY_ADDR, data, 2);
 }
 
 void MAX11254_conversion_command(uint8_t rate) {
@@ -109,12 +116,12 @@ int32_t MAX11254_get_raw_data(int channel) {
     bin_value |= ((uint32_t) raw_data[0]) << 16;
     bin_value |= ((uint32_t) raw_data[1]) << 8;
     bin_value |= (uint32_t) raw_data[2];
-    if (bin_value | 0x00800000) bin_value |= 0xFF000000;
+    if (bin_value & 0x00800000) bin_value |= 0xFF000000;
     return (int32_t) bin_value;
 }
 
 int32_t MAX11254_mode1_read(uint8_t channel, uint8_t rate) {
-    MAX11254_select_channel(channel);
+    MAX11254_select_channel(channel, 0, 64);
     MAX11254_conversion_command(rate);
     bool data_rdy = MAX11254_data_ready();
 

@@ -7,6 +7,7 @@
 #include "UART.h"
 #include "SPI.h"
 #include "MAX11254.h"
+#include "SAC.h"
 
 #define MCLK_FREQ_KHZ 24000
 #define MCLK_FLLREF_RATIO 732   // 32.768kHz * 732 = 24MHz
@@ -19,11 +20,13 @@ uint8_t string_len = 0;
 int32_t adc_data[5] = {0};
 uint8_t adc_rate = RATE_2;
 uint8_t adc_channel = 0;
+uint8_t adc_delay = 64;
+uint8_t adc_pga = 0;
 
 commandState command_state = COMMAND_IDLE;
 readState read_state = READ_INITIATE_READ;
 bool enter_lpm;
-
+bool stream_adc = false;
 void init_clocks();
 
 void initiate_adc_read();
@@ -33,27 +36,31 @@ void get_adc_data();
 void parse_and_execute_command();
 void read_adc_command();
 void set_rate_command();
+void set_dac_command();
+void set_pga_command();
+void set_delay_command();
+void stream_adc_command();
 
 bool strings_equal(uint8_t *str1, uint8_t *str2, int length);
 void itoa(int32_t value, uint8_t* result, int base);
-
+uint32_t string_to_int(uint8_t *str, uint8_t eos, uint8_t *invalid);
 
 int main(void) {
     WDT_A_hold(WDT_A_BASE);
     PMM_unlockLPM5();
-
     init_clocks();
     UART_init();
     SPI_init(true, false, true, SPI_CLK_FREQ, true);
     MAX11254_init_gpio();
+    SAC_init();
     GPIO_selectInterruptEdge(
             GPIO_PORT_RDYB,
             GPIO_PIN_RDYB,
             GPIO_HIGH_TO_LOW_TRANSITION
     );
 
-
-    MAX11254_enter_seq_mode1(false, 64, adc_rate);
+    MAX11254_config_ctrl2(false, adc_pga);
+    MAX11254_enter_seq_mode1(false, adc_delay, adc_rate);
     GPIO_clearInterrupt(GPIO_PORT_RDYB, GPIO_PIN_RDYB);
     GPIO_enableInterrupt(GPIO_PORT_RDYB, GPIO_PIN_RDYB);
     __enable_interrupt();
@@ -86,6 +93,7 @@ int main(void) {
             __bis_SR_register(LPM0_bits | GIE);
         }
     }
+
     return (0);
 }
 
@@ -119,6 +127,19 @@ void parse_and_execute_command() {
 
     } else if (strings_equal("set_rate ", string, 9)) {
         set_rate_command();
+
+    } else if (strings_equal("set_dac ", string, 8)) {
+        set_dac_command();
+
+    } else if (strings_equal("set_pga ", string, 8)) {
+        set_pga_command();
+
+    } else if (strings_equal("set_delay ", string, 10)) {
+        set_delay_command();
+
+    } else if (strings_equal("stream_adc ", string, 11)) {
+        stream_adc_command();
+
     } else {
         UART_transmit_bytes("Unrecognized Command: ", 22, true);
         UART_transmit_bytes(string, string_len, true);
@@ -172,14 +193,72 @@ void read_adc_command() {
         itoa(adc_data[i], string, 10);
         int k = 0;
         while (string[k] != '\0') k++;
-        UART_transmit_bytes(string, k-1, true);
+        UART_transmit_bytes(string, k, true);
         UART_transmit_bytes("\r\n", 2, true);
     }
     command_state = COMMAND_IDLE;
 }
 
+void set_dac_command() {
+    uint8_t invalid_command = false;
+    uint32_t val = string_to_int(&string[8], '\r', &invalid_command);
+    if (val > 4095) invalid_command = true;
+    if (invalid_command == 1) {
+        UART_transmit_bytes("Invalid Arguments for ", 22, true);
+        UART_transmit_bytes("set_dac Command:\r\n\tArg: ", 24, true);
+        UART_transmit_bytes(&string[8], string_len - 8, true);
+        UART_transmit_bytes("\r\n", 2, true);
+    } else {
+        SAC_set_dac(val);
+        UART_transmit_bytes("DAC Set to ", 11, true);
+        UART_transmit_bytes(&string[8], string_len - 9, true);
+        UART_transmit_bytes(" LSB\r\n", 6, true);
+    }
+}
+
+void set_pga_command() {
+    uint8_t val = string[8] - 48;
+    if (val < 8 && string[9] == '\r') {
+        adc_pga = val;
+        UART_transmit_bytes("PGA Set to Gain ", 16, true);
+        UART_transmit_bytes(&string[8], 1, true);
+        UART_transmit_bytes("\r\n", 2, true);
+
+    } else {
+        UART_transmit_bytes("Invalid Argument for ", 22, true);
+        UART_transmit_bytes("set_pga Command:\r\n\tArg: ", 24, true);
+        UART_transmit_bytes(&string[8], string_len - 8, true);
+        UART_transmit_bytes("\r\n", 2, true);
+    }
+}
+
+void set_delay_command() {
+    uint8_t invalid;
+    uint32_t val = string_to_int(&string[10], '\r', &invalid);
+    if (val < 256 && !invalid) {
+        adc_delay = val;
+        itoa((int32_t) val*4, string, 10);
+        UART_transmit_bytes("Delay Set to ", 13, true);
+        int k = 0;
+        while (string[k] != '\0') k++;
+        UART_transmit_bytes(string, k, true);
+        UART_transmit_bytes(" usec\r\n", 7, true);
+
+    } else {
+        UART_transmit_bytes("Invalid Argument for ", 22, true);
+        UART_transmit_bytes("set_delay Command:\r\n\tArg: ", 25, true);
+        UART_transmit_bytes(&string[10], string_len - 9, true);
+        UART_transmit_bytes("\r\n", 2, true);
+    }
+}
+
+void stream_adc_command() {
+    if (strings_equal("on\r", &string[11], 3)) stream_adc = true;
+    else if (strings_equal("off\r", &string[11], 4)) stream_adc = false;
+}
+
 void initiate_adc_read() {
-    MAX11254_select_channel(adc_channel);
+    MAX11254_select_channel(adc_channel, adc_pga, adc_delay);
     MAX11254_conversion_command(adc_rate);
     read_state = READ_IDLE;
 }
@@ -188,6 +267,7 @@ void get_adc_data() {
     adc_data[adc_channel] = MAX11254_get_raw_data(adc_channel);
     if (adc_channel == CHANNEL_COUNT - 1) {
         adc_channel = CHANNEL_0;
+        if (stream_adc) read_adc_command();
     } else {
         adc_channel++;
     }
@@ -232,6 +312,27 @@ bool strings_equal(uint8_t *str1, uint8_t *str2, int length) {
         if (str1[i] != str2[i]) return false;
     }
     return true;
+}
+
+uint32_t string_to_int(uint8_t *str, uint8_t eos, uint8_t *invalid) {
+    uint32_t result = 0;
+    *invalid = 0;
+    int k = 0;
+    while (str[k] != eos) {
+        if (k > 5) {
+            *invalid = 1;
+            return 0;
+        }
+        uint8_t converted = str[k] - 48;
+        if (converted > 9) {
+            *invalid = 1;
+            return 0;
+        }
+        result *= 10;
+        result += converted;
+        k++;
+    }
+    return result;
 }
 
 #pragma vector=PORT3_VECTOR

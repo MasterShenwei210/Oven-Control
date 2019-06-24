@@ -12,6 +12,6 @@
 #include "driverlib.h"
 
 void SAC_init();
-void SAC_write_dac(uint16_t val);
+void SAC_set_dac(uint16_t val);
 
 #endif /* SAC_H_ */

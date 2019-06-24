@@ -5,6 +5,7 @@
  *      Author: Sherwin
  */
 
+
 #ifndef BOARD_H_
 #define BOARD_H_
 
@@ -43,15 +44,15 @@
 
 #define GPIO_PORT_OA2N                  GPIO_PORT_P3
 #define GPIO_PIN_OA2N                   GPIO_PIN2
-#define GPIO_FUNCTION_OA2N              GPIO_PRIMARY_MODULE_FUNCTION
+#define GPIO_FUNCTION_OA2N              GPIO_TERNARY_MODULE_FUNCTION
 
 #define GPIO_PORT_OA2O                  GPIO_PORT_P3
 #define GPIO_PIN_OA2O                   GPIO_PIN1
-#define GPIO_FUNCTION_OA2O              GPIO_PRIMARY_MODULE_FUNCTION
+#define GPIO_FUNCTION_OA2O              GPIO_TERNARY_MODULE_FUNCTION
 
 typedef enum commandStateEnum {
     COMMAND_IDLE,
-    COMMAND_RECEIVE
+    COMMAND_RECEIVE,
 } commandState;
 
 typedef enum readStateEnum {

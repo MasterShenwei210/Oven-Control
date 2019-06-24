@@ -85,7 +85,7 @@ void MAX11254_config_ctrl2(bool lpm, uint8_t pga_gain);
 void MAX11254_internal_calibration();
 void MAX11254_enter_seq_mode1(bool continuous, uint8_t mux_delay,  uint8_t rate);
 void MAX11254_enter_seq_mode2(bool continuous, uint8_t mux_delay);
-void MAX11254_select_channel(uint8_t channel);
+void MAX11254_select_channel(uint8_t channel, uint8_t pga, uint8_t delay);
 void MAX11254_conversion_command(uint8_t rate);
 
 int32_t MAX11254_get_raw_data(int channel);

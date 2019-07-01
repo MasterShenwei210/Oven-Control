@@ -17,16 +17,22 @@
 uint8_t string[30] = {0};
 uint8_t string_len = 0;
 
-int32_t adc_data[5] = {0};
+int32_t adc_data[CHANNEL_COUNT] = {0};
+int32_t adc_self_cal[CHANNEL_COUNT];
 uint8_t adc_rate = RATE_2;
 uint8_t adc_channel = 0;
 uint8_t adc_delay = 64;
 uint8_t adc_pga = 0;
+uint8_t self_calib = 0;
+
 
 commandState command_state = COMMAND_IDLE;
 readState read_state = READ_INITIATE_READ;
+
 bool enter_lpm;
 bool stream_adc = false;
+bool calib_start_flg = false;
+
 void init_clocks();
 
 void initiate_adc_read();
@@ -200,10 +206,10 @@ void read_adc_command() {
 }
 
 void set_dac_command() {
-    uint8_t invalid_command = false;
+    uint8_t invalid_command = 0;
     uint32_t val = string_to_int(&string[8], '\r', &invalid_command);
     if (val > 4095) invalid_command = true;
-    if (invalid_command == 1) {
+    if (invalid_command) {
         UART_transmit_bytes("Invalid Arguments for ", 22, true);
         UART_transmit_bytes("set_dac Command:\r\n\tArg: ", 24, true);
         UART_transmit_bytes(&string[8], string_len - 8, true);
@@ -233,7 +239,7 @@ void set_pga_command() {
 }
 
 void set_delay_command() {
-    uint8_t invalid;
+    uint8_t invalid = 0;
     uint32_t val = string_to_int(&string[10], '\r', &invalid);
     if (val < 256 && !invalid) {
         adc_delay = val;
@@ -259,6 +265,7 @@ void stream_adc_command() {
 
 void initiate_adc_read() {
     MAX11254_select_channel(adc_channel, adc_pga, adc_delay);
+    if (calib_start_flag) self_calib = CHANNEL_COUNT;
     MAX11254_conversion_command(adc_rate);
     read_state = READ_IDLE;
 }

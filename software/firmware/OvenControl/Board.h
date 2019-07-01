@@ -58,8 +58,13 @@ typedef enum commandStateEnum {
 typedef enum readStateEnum {
     READ_IDLE,
     READ_INITIATE_READ,
-    READ_GET_DATA
+    READ_GET_DATA,
+    READ_INITIATE_SELF_CAL,
+    READ_GET_SELF_CAL,
+    READ_INITIATE_SYS_CAL,
+    READ_GET_SYS_CAL
 } readState;
+
 
 extern commandState command_state;
 #endif /* BOARD_H_ */

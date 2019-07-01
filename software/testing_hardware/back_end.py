@@ -31,30 +31,16 @@ class BackEndHandler:
         com = serial.Serial(port, baudrate=115200)
         print("connected to", com.name)
         print("waiting for response from device")
-
-        got_response = False
-        timed_out = False
-        before = time.time()
-        while not got_response and not timed_out:
-            com.write('s'.encode())
-
-            if com.inWaiting() > 1:
-                response = com.read(2).decode()
-                print('got', response)
-                if response == 'ok':
-                    got_response = True
-
-            if time.time() - before > 3:
-                timed_out = True
-
-            time.sleep(.1)
-
-        if not got_response:
-            print('did not get response')
-            return None
-
-        print('connected to device')
         return com
+
+    def read_bytes(self):
+        if (self.esp.inWaiting() == 0): return ''
+        print('got something')
+        count = self.esp.inWaiting()
+        return self.esp.read(self.esp.inWaiting()).decode()
+
+    def write_bytes(self, string):
+        self.esp.write(string.encode())
 
     def read_message(self, length, raw=False):
         timed_out = False
@@ -224,7 +210,3 @@ class BackEndHandler:
 
         time.sleep(.5)
         return self.read_message(self.esp.inWaiting())
-
-
-
-

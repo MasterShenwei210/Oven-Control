@@ -11043,6 +11043,7 @@ distributor RS 112-3794</description>
 <pinref part="U6" gate="A" pin="OUT+"/>
 <wire x1="48.26" y1="-137.16" x2="55.88" y2="-137.16" width="0.1524" layer="91"/>
 <wire x1="55.88" y1="-137.16" x2="55.88" y2="-134.62" width="0.1524" layer="91"/>
+<label x="50.8" y="-129.54" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$26" class="0">
@@ -11052,6 +11053,7 @@ distributor RS 112-3794</description>
 <pinref part="U6" gate="A" pin="OUT-"/>
 <wire x1="48.26" y1="-134.62" x2="53.34" y2="-134.62" width="0.1524" layer="91"/>
 <wire x1="53.34" y1="-134.62" x2="53.34" y2="-144.78" width="0.1524" layer="91"/>
+<label x="53.34" y="-147.32" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="A_3.3V" class="0">
@@ -11060,6 +11062,9 @@ distributor RS 112-3794</description>
 <pinref part="C6" gate="G$1" pin="2"/>
 <wire x1="-218.44" y1="-20.32" x2="-213.36" y2="-20.32" width="0.1524" layer="91"/>
 <wire x1="-213.36" y1="-20.32" x2="-213.36" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="-213.36" y1="-20.32" x2="-203.2" y2="-20.32" width="0.1524" layer="91"/>
+<junction x="-213.36" y="-20.32"/>
+<label x="-210.82" y="-20.32" size="1.778" layer="95"/>
 </segment>
 <segment>
 <wire x1="-154.94" y1="-127" x2="-154.94" y2="-137.16" width="0.1524" layer="91"/>
@@ -11276,6 +11281,7 @@ distributor RS 112-3794</description>
 <wire x1="190.5" y1="-180.34" x2="190.5" y2="-172.72" width="0.1524" layer="91"/>
 <wire x1="190.5" y1="-172.72" x2="198.12" y2="-172.72" width="0.1524" layer="91"/>
 <junction x="190.5" y="-172.72"/>
+<label x="193.04" y="-172.72" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="BUF_VB" class="0">

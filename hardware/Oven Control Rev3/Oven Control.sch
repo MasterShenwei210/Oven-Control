@@ -11060,6 +11060,9 @@ distributor RS 112-3794</description>
 <pinref part="C6" gate="G$1" pin="2"/>
 <wire x1="-218.44" y1="-20.32" x2="-213.36" y2="-20.32" width="0.1524" layer="91"/>
 <wire x1="-213.36" y1="-20.32" x2="-213.36" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="-213.36" y1="-20.32" x2="-203.2" y2="-20.32" width="0.1524" layer="91"/>
+<junction x="-213.36" y="-20.32"/>
+<label x="-210.82" y="-20.32" size="1.778" layer="95"/>
 </segment>
 <segment>
 <wire x1="-154.94" y1="-127" x2="-154.94" y2="-137.16" width="0.1524" layer="91"/>

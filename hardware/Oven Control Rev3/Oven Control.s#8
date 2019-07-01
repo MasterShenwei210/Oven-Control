@@ -12202,7 +12202,6 @@ distributor RS 112-3794</description>
 <pinref part="U5" gate="A" pin="CAPREG"/>
 <wire x1="-93.98" y1="-149.86" x2="-79.502" y2="-149.86" width="0.1524" layer="91"/>
 <pinref part="C34" gate="G$1" pin="2"/>
-<wire x1="-78.74" y1="-149.86" x2="-79.502" y2="-149.86" width="0.1524" layer="91"/>
 <wire x1="-79.502" y1="-149.86" x2="-79.502" y2="-170.18" width="0.1524" layer="91"/>
 </segment>
 </net>

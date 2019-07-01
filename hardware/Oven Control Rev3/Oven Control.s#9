@@ -10234,6 +10234,7 @@ distributor RS 112-3794</description>
 <part name="BUF_VB" library="con-coax" library_urn="urn:adsk.eagle:library:133" deviceset="BU-SMA-V" device="" package3d_urn="urn:adsk.eagle:package:6211/1"/>
 <part name="BUF_VDD" library="con-coax" library_urn="urn:adsk.eagle:library:133" deviceset="BU-SMA-V" device="" package3d_urn="urn:adsk.eagle:package:6211/1"/>
 <part name="AMP_VB" library="con-coax" library_urn="urn:adsk.eagle:library:133" deviceset="BU-SMA-V" device="" package3d_urn="urn:adsk.eagle:package:6211/1"/>
+<part name="C34" library="pie" deviceset="CAP" device="0402-CAP" value=".22uF"/>
 </parts>
 <sheets>
 <sheet>
@@ -10668,6 +10669,10 @@ distributor RS 112-3794</description>
 <attribute name="VALUE" x="-209.296" y="-60.96" size="1.778" layer="96"/>
 <attribute name="NAME" x="-209.296" y="-52.578" size="1.778" layer="95"/>
 </instance>
+<instance part="C34" gate="G$1" x="-79.502" y="-175.26" smashed="yes" rot="R90">
+<attribute name="NAME" x="-82.042" y="-179.07" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="-74.422" y="-179.07" size="1.778" layer="96" rot="R90"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -10923,7 +10928,8 @@ distributor RS 112-3794</description>
 <wire x1="-144.78" y1="-139.7" x2="-147.32" y2="-139.7" width="0.1524" layer="91"/>
 <wire x1="-147.32" y1="-139.7" x2="-147.32" y2="-144.78" width="0.1524" layer="91"/>
 <junction x="-147.32" y="-144.78"/>
-<wire x1="-147.32" y1="-193.04" x2="-68.58" y2="-193.04" width="0.1524" layer="91"/>
+<wire x1="-147.32" y1="-193.04" x2="-79.502" y2="-193.04" width="0.1524" layer="91"/>
+<wire x1="-78.74" y1="-193.04" x2="-68.58" y2="-193.04" width="0.1524" layer="91"/>
 <wire x1="-68.58" y1="-193.04" x2="-63.5" y2="-193.04" width="0.1524" layer="91"/>
 <wire x1="-63.5" y1="-193.04" x2="-58.42" y2="-193.04" width="0.1524" layer="91"/>
 <wire x1="-58.42" y1="-193.04" x2="-55.88" y2="-193.04" width="0.1524" layer="91"/>
@@ -10954,6 +10960,9 @@ distributor RS 112-3794</description>
 <pinref part="C16" gate="G$1" pin="1"/>
 <wire x1="-149.86" y1="-177.8" x2="-149.86" y2="-193.04" width="0.1524" layer="91"/>
 <junction x="-149.86" y="-193.04"/>
+<pinref part="C34" gate="G$1" pin="1"/>
+<wire x1="-79.502" y1="-177.8" x2="-79.502" y2="-193.04" width="0.1524" layer="91"/>
+<wire x1="-79.502" y1="-193.04" x2="-78.74" y2="-193.04" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <wire x1="-152.4" y1="50.8" x2="-142.24" y2="50.8" width="0.1524" layer="91"/>
@@ -12191,7 +12200,10 @@ distributor RS 112-3794</description>
 <net name="N$10" class="0">
 <segment>
 <pinref part="U5" gate="A" pin="CAPREG"/>
-<wire x1="-93.98" y1="-149.86" x2="-73.66" y2="-149.86" width="0.1524" layer="91"/>
+<wire x1="-93.98" y1="-149.86" x2="-79.502" y2="-149.86" width="0.1524" layer="91"/>
+<pinref part="C34" gate="G$1" pin="2"/>
+<wire x1="-78.74" y1="-149.86" x2="-79.502" y2="-149.86" width="0.1524" layer="91"/>
+<wire x1="-79.502" y1="-149.86" x2="-79.502" y2="-170.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

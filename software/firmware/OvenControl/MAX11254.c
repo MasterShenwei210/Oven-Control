@@ -89,6 +89,18 @@ void MAX11254_conversion_command(uint8_t rate) {
     SPI_transfer_bytes(transmit_buffer, receive_buffer, 1, false);
 }
 
+void MAX11254_self_calib_command(uint8_t rate) {
+    uint8_t ctrl_reg;
+    MAX11254_read_register(CTRL1_ADDR, &ctrl_reg, 1);
+    ctrl_reg &= 0x3F;
+    MAX11254_write_register(CTRL1_ADDR, &ctrl_reg, 1);
+
+    transmit_buffer[0] = COMMAND_BYTE + BIT5 + (rate & 0x0F);
+    while(SPI_transfering);
+    SPI_transfer_bytes(transmit_buffer, receive_buffer, 1, false);
+}
+
+
 int32_t MAX11254_get_raw_data(int channel) {
     uint8_t raw_data[3];
     switch(channel) {

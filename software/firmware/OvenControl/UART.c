@@ -167,9 +167,7 @@ void UART_ISR(void) {
                     UART_receive_buffer[UART_receive_count]
                 );
 
-                if (UART_receive_buffer[UART_receive_count+1] != 0x08) {
-                    UART_receive_count++;
-                }
+                UART_receive_count++;
             }
             command_state = COMMAND_RECEIVE;
             __bic_SR_register_on_exit(LPM0_bits);

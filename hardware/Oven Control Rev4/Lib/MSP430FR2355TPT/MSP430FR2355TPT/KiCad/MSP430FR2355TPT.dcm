@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP MSP430FR2355TPT
+D 16-bit Microcontrollers - MCU 24MHz 105C ULP Microcontroller With 32 KB FRAM, 4 KB SRAM, 44 IO, 12-bit ADC, 12-bit DACs, OpAmp/PGA 48-LQFP -40 to 105
+K
+F https://www.arrow.com/en/products/msp430fr2355tpt/texas-instruments
+$ENDCMP
+#
+#End Doc Library

@@ -243,6 +243,7 @@
 <dimension x1="0" y1="0" x2="0" y2="95.047" x3="-5.588" y3="47.5235" textsize="1.016" textratio="15" layer="47"/>
 <dimension x1="67.31" y1="82.55" x2="6.35" y2="82.55" x3="36.83" y3="97.79" textsize="1.016" textratio="15" layer="47" dtype="diameter"/>
 <dimension x1="68.58" y1="81.28" x2="68.58" y2="3.81" x3="81.28" y3="42.545" textsize="1.016" textratio="15" layer="47" dtype="diameter"/>
+<dimension x1="17.653" y1="30.734" x2="52.451" y2="30.607" x3="35.0654375" y3="34.352059375" textsize="1.778" layer="47"/>
 </plain>
 <libraries>
 <library name="pie">
@@ -3109,9 +3110,8 @@ design rules under a new name.</description>
 <contactref element="R15" pad="1"/>
 <contactref element="C30" pad="2"/>
 <contactref element="R14" pad="2"/>
-<wire x1="38.1" y1="36.21" x2="38.1" y2="37.48" width="0.2032" layer="16"/>
-<wire x1="38.1" y1="37.48" x2="36.352" y2="39.228" width="0.2032" layer="16"/>
-<wire x1="36.352" y1="39.228" x2="33.02" y2="39.228" width="0.2032" layer="16"/>
+<wire x1="38.1" y1="36.21" x2="35.082" y2="39.228" width="0.2032" layer="16"/>
+<wire x1="35.082" y1="39.228" x2="33.02" y2="39.228" width="0.2032" layer="16"/>
 <wire x1="30.988" y1="40.498" x2="30.988" y2="39.59785625" width="0.2032" layer="16"/>
 <wire x1="30.988" y1="39.59785625" x2="34.979865625" y2="35.605990625" width="0.2032" layer="16"/>
 <wire x1="34.979865625" y1="35.605990625" x2="37.495990625" y2="35.605990625" width="0.2032" layer="16"/>
